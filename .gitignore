@@ -1,2 +1,8 @@
 .env
 .idea
+.secrets
+atml/data/*
+
+
+
+.secrets.inc
