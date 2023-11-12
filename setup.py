@@ -13,7 +13,7 @@ logging.info(f"[tgedr-nihao] building version: {version}")
 setup(
     name='tgedr-nihao',
     version=version,
-    description='This package provides code derived from studies with financial data sources',
+    description='studies with financial data sources',
     url='https://github.com/jtviegas-sandbox/nihao',
     author='joao tiago viegas',
     author_email='jtviegas@gmail.com',
