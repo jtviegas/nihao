@@ -99,7 +99,7 @@ build(){
 
   rm -rf dist
   python3 -m build
-  [ "$?" -ne "0" ] && err "[build] ooppss"
+  [ "$?" -ne "0" ] && err "[build] ooppss" && exit 1
 
   cd "$_pwd"
   echo "[build] ...done."
@@ -112,7 +112,7 @@ publish(){
   cd "$this_folder"
 
   twine upload -u $PYPI_USER -p $PYPI_API_TOKEN dist/*
-  [ "$?" -ne "0" ] && err "[publish] ooppss"
+  [ "$?" -ne "0" ] && err "[publish] ooppss" && exit 1
 
   cd "$_pwd"
   echo "[publish] ...done."
@@ -138,7 +138,7 @@ code_lint()
       return_value=$?
       info "[code_lint] ... black...$return_value"
     fi
-    [[ ! "$return_value" -eq "0" ]] && exit 1
+    [ "$return_value" -ne "0" ] && exit 1
     info "[code_lint|out] => ${return_value}"
 }
 
@@ -162,7 +162,7 @@ code_check()
       return_value=$?
       info "[code_check] ... black...$return_value"
     fi
-    [[ ! "$return_value" -eq "0" ]] && exit 1
+    [ "$return_value" -ne "0" ] && exit 1
     info "[code_check|out] => ${return_value}"
 }
 
@@ -171,7 +171,7 @@ check_coverage()
   info "[check_coverage|in]"
   coverage report -m
   result="$?"
-  [[ "$result" -ne "0" ]] && exit 1
+  [ "$result" -ne "0" ] && exit 1
   info "[check_coverage|out] => $result"
 }
 
@@ -179,16 +179,16 @@ test()
 {
     info "[test|in] ($1)"
     python -m pytest -x -vv --durations=0 --cov=src --junitxml=tests-results.xml --cov-report=xml --cov-report=html "$1"
-    return_value=$?
+    return_value="$?"
+    [ "$return_value" -ne "0" ] && exit 1
     info "[test|out] => ${return_value}"
-    [[ ! "$return_value" -eq "0" ]] && exit 1
 }
 
 reqs()
 {
     info "[reqs|in]"
     pip install -r requirements.txt
-    [[ ! "$return_value" -eq "0" ]] && exit 1
+    [ "$?" -ne "0" ] && exit 1
     info "[reqs|out]"
 }
 
