@@ -6,7 +6,8 @@ from setuptools import setup, find_namespace_packages
 logger = logging.getLogger(__name__)
 VERSION = "0.0.2"
 
-version = os.getenv("TGEDR_NIHAO_VERSION", VERSION)
+# version = os.getenv("TGEDR_NIHAO_VERSION", VERSION)
+version = VERSION 
 
 logging.info(f"[tgedr-nihao] building version: {version}")
 
