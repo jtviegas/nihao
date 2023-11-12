@@ -1,8 +1,11 @@
-.env
+.ipynb_checkpoints
+.venv
+.vscode
+.DS_Store
 .idea
+__pycache__
+.env
 .secrets
-atml/data/*
-
-
-
-.secrets.inc
+.local_variables
+dist/
+.pytest_cache
