@@ -1,6 +1,7 @@
-from typing import Dict, List
+from typing import List
 from pandas import DataFrame
 from pandas.testing import assert_frame_equal
+
 
 def assert_frames_are_equal(actual: DataFrame, expected: DataFrame, sort_columns: List[str], abs_tol: float = None):
     results_sorted = actual.sort_values(by=sort_columns).reset_index(drop=True)

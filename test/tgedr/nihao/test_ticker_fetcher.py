@@ -1,8 +1,7 @@
-from datetime import datetime
 import pytest
-from pandas import Timestamp, DataFrame
-
 import yfinance as yf
+from pandas import DataFrame, Timestamp
+
 from tgedr.nihao.commons import assert_frames_are_equal
 from tgedr.nihao.ticker_fetcher import YahooFetcher
 

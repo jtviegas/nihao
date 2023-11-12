@@ -111,11 +111,85 @@ publish(){
   _pwd=`pwd`
   cd "$this_folder"
 
-  twine upload dist/*
+  twine upload -u $PYPI_USER -p $PYPI_API_TOKEN dist/*
   [ "$?" -ne "0" ] && err "[publish] ooppss"
 
   cd "$_pwd"
   echo "[publish] ...done."
+}
+
+code_lint()
+{
+    info "[code_lint|in]"
+    src_folders="src test"
+    info "[code_lint] ... isort..."
+    isort --profile black --src $src_folders
+    return_value=$?
+    info "[code_lint] ... isort...$return_value"
+    if [ "$return_value" -eq "0" ]; then
+      info "[code_lint] ... autoflake..."
+      autoflake --remove-all-unused-imports --in-place --recursive -r $src_folders
+      return_value=$?
+      info "[code_lint] ... autoflake...$return_value"
+    fi
+    if [ "$return_value" -eq "0" ]; then
+      info "[code_lint] ... black..."
+      black -v -t py38 $src_folders
+      return_value=$?
+      info "[code_lint] ... black...$return_value"
+    fi
+    [[ ! "$return_value" -eq "0" ]] && exit 1
+    info "[code_lint|out] => ${return_value}"
+}
+
+code_check()
+{
+    info "[code_check|in]"
+    src_folders="src test"
+    info "[code_check] ... isort..."
+    isort --profile black -v --src $src_folders
+    return_value=$?
+    info "[code_check] ... isort...$return_value"
+    if [ "$return_value" -eq "0" ]; then
+      info "[code_check] ... autoflake..."
+      autoflake --check -r $src_folders
+      return_value=$?
+      info "[code_check] ... autoflake...$return_value"
+    fi
+    if [ "$return_value" -eq "0" ]; then
+      info "[code_check] ... black..."
+      black --check $src_folders
+      return_value=$?
+      info "[code_check] ... black...$return_value"
+    fi
+    [[ ! "$return_value" -eq "0" ]] && exit 1
+    info "[code_check|out] => ${return_value}"
+}
+
+check_coverage()
+{
+  info "[check_coverage|in]"
+  coverage report -m
+  result="$?"
+  [[ "$result" -ne "0" ]] && exit 1
+  info "[check_coverage|out] => $result"
+}
+
+test()
+{
+    info "[test|in] ($1)"
+    python -m pytest -x -vv --durations=0 --cov=src --junitxml=tests-results.xml --cov-report=xml --cov-report=html "$1"
+    return_value=$?
+    info "[test|out] => ${return_value}"
+    [[ ! "$return_value" -eq "0" ]] && exit 1
+}
+
+reqs()
+{
+    info "[reqs|in]"
+    pip install -r requirements.txt
+    [[ ! "$return_value" -eq "0" ]] && exit 1
+    info "[reqs|out]"
 }
 
 # -------------------------------------
@@ -128,6 +202,11 @@ usage() {
       - update_bashutils: updates the include '.bashutils' file
       - build
       - publish
+      - test
+      - coverage
+      - code_check
+      - code_lint
+      - reqs
 EOM
   exit 1
 }
@@ -147,6 +226,21 @@ case "$1" in
   publish)
     publish
     ;;
+  test)
+      test "$2"
+      ;;
+  coverage)
+      check_coverage
+      ;;
+  code_check)
+      code_check
+      ;;
+  code_lint)
+      code_lint
+      ;;
+  reqs)
+      reqs
+      ;;
   *)
     usage
     ;;

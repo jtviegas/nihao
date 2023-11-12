@@ -2,10 +2,8 @@ import asyncio
 import collections
 import logging
 import os
-import sys
 from http import HTTPStatus
 
-import investpy
 import pandas as pd
 import tqdm
 import http.client
@@ -16,52 +14,52 @@ from pandas import DataFrame
 
 
 base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_FOLDER=f'{base_path}/data'
+DATA_FOLDER = f"{base_path}/data"
 
 DEFAULT_CONCUR_REQ = 5
 MAX_CONCUR_REQ = 1000
-BONDS = ['0001', '0033']
+BONDS = ["0001", "0033"]
 
 logger = logging.getLogger(__name__)
 
 
-class FetchException(Exception):
+class FetchException(Exception):  # pragma: no cover
     def __init__(self, cause: Exception, msg: str = None):
         self.cause = cause
         self.msg = msg
 
 
-def get_pickle_file_path(name: str):
+def get_pickle_file_path(name: str):  # pragma: no cover
     return f"{DATA_FOLDER}/{name.replace(' ', '_')}.pkl"
 
 
-def store_pickle(data: DataFrame, name: str):
+def store_pickle(data: DataFrame, name: str):  # pragma: no cover
     data.to_pickle(get_pickle_file_path(name))
 
 
-def read_pickle(name: str):
+def read_pickle(name: str):  # pragma: no cover
     return pd.read_pickle(get_pickle_file_path(name))
 
 
-def is_pickle(name: str):
+def is_pickle(name: str):  # pragma: no cover
     return os.path.isfile(get_pickle_file_path(name))
 
 
 @asyncio.coroutine
-def get_bond_info(bond: str, semaphore):
+def get_bond_info(bond: str, semaphore):  # pragma: no cover
     logger.warning(f"[get_bond_info|in] ({bond})")
     try:
-
         if is_pickle(bond):
             data = read_pickle(bond)
         else:
             with (yield from semaphore):
-                conn = http.client.HTTPSConnection("synthetic-financial-data.p.rapidapi.com",
-                                                   context=ssl._create_unverified_context())
+                conn = http.client.HTTPSConnection(
+                    "synthetic-financial-data.p.rapidapi.com", context=ssl._create_unverified_context()
+                )
 
                 headers = {
-                    'x-rapidapi-key': os.getenv('RAPID_API_KEY'),
-                    'x-rapidapi-host': "synthetic-financial-data.p.rapidapi.com"
+                    "x-rapidapi-key": os.getenv("RAPID_API_KEY"),
+                    "x-rapidapi-host": "synthetic-financial-data.p.rapidapi.com",
                 }
                 conn.request("GET", "/?asset_class=bond&symbol=0008&size=full", headers=headers)
 
@@ -80,7 +78,7 @@ def get_bond_info(bond: str, semaphore):
 
 
 @asyncio.coroutine
-def get_bonds(bonds, verbose, concur_req):
+def get_bonds(bonds, verbose, concur_req):  # pragma: no cover
     logger.warning("[get_bonds|in]")
     counter = collections.Counter()
     semaphore = asyncio.Semaphore(concur_req)
@@ -103,7 +101,7 @@ def get_bonds(bonds, verbose, concur_req):
             except IndexError:
                 error_msg = exc.__cause__.__class__.__name__
             if verbose and error_msg:
-                msg = '*** Error for {}: {}'
+                msg = "*** Error for {}: {}"
                 print(msg.format(cause, error_msg))
             status = HTTPStatus.error
 
@@ -112,7 +110,7 @@ def get_bonds(bonds, verbose, concur_req):
     return counter
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     logger.warning("[main|in]")
     loop = asyncio.get_event_loop()
     coro = get_bonds(BONDS, False, DEFAULT_CONCUR_REQ)

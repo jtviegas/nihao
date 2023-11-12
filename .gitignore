@@ -9,3 +9,6 @@ __pycache__
 .local_variables
 dist/
 .pytest_cache
+.coverage
+coverage.xml
+tests-results.xml

@@ -1,0 +1,36 @@
+name: MasterRelease
+on:
+  push:
+    branches:
+      - release
+      - development
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: set up python 3.10
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.10
+    - name: install requirements
+      run: ./helper.sh reqs
+    - name: check code
+      run: ./helper.sh code_check  
+    - name: run unit tests
+      run: ./helper.sh test
+    - name: check coverage
+      run: ./helper.sh coverage
+    - name: build
+      run: ./helper.sh build
+    - name: publish
+      if: ${{ github.ref == 'refs/heads/release' }}
+      env: # Or as an environment variable
+        PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      run: ./helper.sh publish
+
+  
+
+    
