@@ -2,7 +2,7 @@ import io
 import logging
 from typing import Any, Dict, Optional
 import pandas as pd
-from tgedr.nihao.s3.s3 import S3Connector
+from tgedr.nihao.s3.s3_connector import S3Connector
 from tgedr.nihao.source.source import Source
 
 logger = logging.getLogger(__name__)

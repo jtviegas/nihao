@@ -14,11 +14,15 @@ class S3Connector:
     @property
     def _session(self):
         if self.__session is None:
-            self.__session = boto3.Session(
-                aws_access_key_id=os.environ["AWS_KEY_ID"],
-                aws_secret_access_key=os.environ["AWS_SECRET_KEY"],
-                region_name=os.environ["AWS_REGION"],
-            )
+            if "1" == os.getenv("S3_CONNECTOR_USE_CREDENTIALS", default="0"):
+                self.__session = boto3.Session(
+                    aws_access_key_id=os.environ["AWS_KEY_ID"],
+                    aws_secret_access_key=os.environ["AWS_SECRET_KEY"],
+                    region_name=os.environ["AWS_REGION"],
+                )
+            else:
+                self.__session = boto3.Session()
+
         return self.__session
 
     @property

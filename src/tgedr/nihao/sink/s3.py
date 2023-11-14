@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, Optional
 
 import pandas as pd
-from tgedr.nihao.s3.s3 import S3Connector
+from tgedr.nihao.s3.s3_connector import S3Connector
 from tgedr.nihao.sink.sink import Sink, SinkException
 
 logger = logging.getLogger(__name__)
