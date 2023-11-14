@@ -11,4 +11,3 @@ def aws_credentials(monkeypatch):
     monkeypatch.setenv("AWS_KEY_ID", "dummy")
     monkeypatch.setenv("AWS_SECRET_KEY", "dummy")
     monkeypatch.setenv("AWS_REGION", "us-east-1")
-    
