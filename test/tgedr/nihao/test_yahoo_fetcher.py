@@ -3,7 +3,7 @@ import yfinance as yf
 from pandas import DataFrame, Timestamp
 
 from tgedr.nihao.commons import assert_frames_are_equal
-from tgedr.nihao.ticker_fetcher import YahooFetcher
+from tgedr.nihao.source.yahoo_tickers import YahooTickersSource
 
 
 @pytest.fixture
@@ -234,8 +234,7 @@ def expected() -> DataFrame:
     )
 
 
-def test_fetch(monkeypatch, data, expected):
-    o = YahooFetcher()
+def test_get(monkeypatch, data, expected):
+    o = YahooTickersSource()
     monkeypatch.setattr(yf, "download", lambda tickers, start, end, interval: data)
-    o.fetch(symbols=["XPTO"])
-    assert_frames_are_equal(actual=o.fetch(["XPTO"]), expected=expected, sort_columns=["actual_time", "variable"])
+    assert_frames_are_equal(actual=o.get(key=["XPTO"]), expected=expected, sort_columns=["actual_time", "variable"])

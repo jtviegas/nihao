@@ -2,11 +2,9 @@ from moto import mock_s3
 from pandas import DataFrame
 
 from tgedr.nihao.commons import assert_frames_are_equal
-from tgedr.nihao.s3.s3 import (
-    Parquet2PdDataFrameS3Source,
-    PdDataFrameS3Sink,
-    S3Connector,
-)
+from tgedr.nihao.s3.s3 import S3Connector
+from tgedr.nihao.sink.s3 import PdDataFrameS3Sink
+from tgedr.nihao.source.s3 import PdDataFrameFromParquetSource
 
 
 @mock_s3
@@ -37,7 +35,7 @@ def test_s3_sink_put(aws_credentials):
     o = PdDataFrameS3Sink(config={})
     o.put(obj=df, key=file_path)
 
-    i = Parquet2PdDataFrameS3Source(config={})
+    i = PdDataFrameFromParquetSource(config={})
     actual = i.get(key=file_path)
 
     assert_frames_are_equal(actual, expected=df, sort_columns=[])
