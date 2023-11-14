@@ -13,5 +13,5 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 [tool.coverage.run]
 omit = [
-    "src/tgedr/nihao/fetcher.py"
+    "src/tgedr/nihao/fetchers/fetcher_study.py"
 ]

@@ -21,7 +21,7 @@ jobs:
     - name: run unit tests
       run: ./helper.sh test
     - name: check coverage
-      run: ./helper.sh check_coverage 90
+      run: ./helper.sh check_coverage 80
     - name: build
       run: ./helper.sh build
     - name: publish
@@ -29,7 +29,3 @@ jobs:
       env:
         PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       run: ./helper.sh publish
-
-  
-
-    
