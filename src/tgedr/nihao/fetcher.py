@@ -23,30 +23,30 @@ BONDS = ["0001", "0033"]
 logger = logging.getLogger(__name__)
 
 
-class FetchException(Exception):  # pragma: no cover
+class FetchException(Exception):
     def __init__(self, cause: Exception, msg: str = None):
         self.cause = cause
         self.msg = msg
 
 
-def get_pickle_file_path(name: str):  # pragma: no cover
+def get_pickle_file_path(name: str):
     return f"{DATA_FOLDER}/{name.replace(' ', '_')}.pkl"
 
 
-def store_pickle(data: DataFrame, name: str):  # pragma: no cover
+def store_pickle(data: DataFrame, name: str):
     data.to_pickle(get_pickle_file_path(name))
 
 
-def read_pickle(name: str):  # pragma: no cover
+def read_pickle(name: str):
     return pd.read_pickle(get_pickle_file_path(name))
 
 
-def is_pickle(name: str):  # pragma: no cover
+def is_pickle(name: str):
     return os.path.isfile(get_pickle_file_path(name))
 
 
 @asyncio.coroutine
-def get_bond_info(bond: str, semaphore):  # pragma: no cover
+def get_bond_info(bond: str, semaphore):
     logger.warning(f"[get_bond_info|in] ({bond})")
     try:
         if is_pickle(bond):
@@ -78,7 +78,7 @@ def get_bond_info(bond: str, semaphore):  # pragma: no cover
 
 
 @asyncio.coroutine
-def get_bonds(bonds, verbose, concur_req):  # pragma: no cover
+def get_bonds(bonds, verbose, concur_req):
     logger.warning("[get_bonds|in]")
     counter = collections.Counter()
     semaphore = asyncio.Semaphore(concur_req)
@@ -110,7 +110,7 @@ def get_bonds(bonds, verbose, concur_req):  # pragma: no cover
     return counter
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     logger.warning("[main|in]")
     loop = asyncio.get_event_loop()
     coro = get_bonds(BONDS, False, DEFAULT_CONCUR_REQ)

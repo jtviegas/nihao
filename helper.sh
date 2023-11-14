@@ -166,13 +166,30 @@ code_check()
     info "[code_check|out] => ${return_value}"
 }
 
-check_coverage()
+print_coverage()
 {
-  info "[check_coverage|in]"
+  info "[print_coverage|in]"
   coverage report -m
   result="$?"
   [ "$result" -ne "0" ] && exit 1
-  info "[check_coverage|out] => $result"
+  info "[print_coverage|out] => $result"
+}
+
+check_coverage()
+{
+  info "[check_coverage|in] ($1)"
+
+  [ -z "$1" ] && usage
+
+  local threshold=$1
+  score=$(coverage report | awk '$1 == "TOTAL" {print $NF+0}')
+   result="$?"
+  [ "$result" -ne "0" ] && exit 1
+  if (( $threshold > $score )); then
+    err "[check_coverage] $score doesn't meet $threshold"
+    exit 1
+  fi
+  info "[check_coverage|out] => $score"
 }
 
 test()
@@ -204,6 +221,7 @@ usage() {
       - publish
       - test
       - coverage
+      - check_coverage
       - code_check
       - code_lint
       - reqs
@@ -230,7 +248,10 @@ case "$1" in
       test "$2"
       ;;
   coverage)
-      check_coverage
+      print_coverage
+      ;;
+  check_coverage)
+      check_coverage "$2"
       ;;
   code_check)
       code_check
