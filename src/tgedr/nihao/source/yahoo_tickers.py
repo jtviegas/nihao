@@ -32,9 +32,18 @@ class YahooTickersSource(Source):
         if "end" in kwargs:
             end = kwargs["end"]
 
-        result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
-
         market_data = yf.download(symbols_as_str, start=start, end=end, interval=interval)
+        result = self.__market_data_2_df_another_approach(market_data, symbols)
+        result.reset_index(drop=True, inplace=True)
+        result = result.sort_values(by=["actual_time", "symbol"])
+
+        logger.info(f"[get|out] => {result}")
+        return result
+
+    def __market_data_2_df(self, market_data, symbols: List[str]) -> pd.DataFrame:
+        logger.info(f"[__market_data_2_df|in] ({market_data}, {symbols})")
+
+        result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
         if not market_data.empty:
             multiple_symbols: bool = 1 < len(symbols)
             for key, val in market_data.to_dict().items():
@@ -51,8 +60,30 @@ class YahooTickersSource(Source):
                         )
                         result = pd.concat([result, entry])
 
-            result.reset_index(drop=True, inplace=True)
-            result = result.sort_values(by=["actual_time", "symbol"])
+        logger.info(f"[__market_data_2_df|out] => {result}")
+        return result
 
-        logger.info(f"[get|out] => {result}")
+    def __market_data_2_df_another_approach(self, market_data, symbols: List[str]) -> pd.DataFrame:
+        logger.info(f"[__market_data_2_df_another_approach|in] ({market_data}, {symbols})")
+
+        df_as_dict = {"symbol": [], "variable": [], "value": [], "actual_time": []}
+        if not market_data.empty:
+            multiple_symbols: bool = 1 < len(symbols)
+            for key, val in market_data.to_dict().items():
+                if multiple_symbols:
+                    variable, symbol = key
+                else:
+                    variable = key
+                    symbol = symbols[0]
+
+                for ts, num in val.items():
+                    if not pd.isnull(num):
+                        (df_as_dict["symbol"]).append(symbol)
+                        (df_as_dict["variable"]).append(variable)
+                        (df_as_dict["value"]).append(num)
+                        (df_as_dict["actual_time"]).append(ts.timestamp())
+
+            result = pd.DataFrame.from_dict(df_as_dict)
+
+        logger.info(f"[__market_data_2_df_another_approach|out] => {result}")
         return result
