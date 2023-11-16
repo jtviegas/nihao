@@ -246,7 +246,7 @@ def test_get(monkeypatch, data, expected):
     assert 0 < df.size
 
 
-# @pytest.mark.skip(reason="should be done manually")
+@pytest.mark.skip(reason="these test should be done manually")
 def test_Tickers2S3parquet():
     # fetcher = Tickers2S3parquet()
     # fetcher.fetch(tickers="AMD,NVDA,MSFT", target="s3://de-landing-dev-c7f56307-b37b-4826-a208-edd0ead99c76/dataengineering")
