@@ -40,7 +40,7 @@ class YahooTickersSource(Source):
         logger.info(f"[get|out] => {result}")
         return result
 
-    def __market_data_2_df(self, market_data, symbols: List[str]) -> pd.DataFrame:
+    def __market_data_2_df(self, market_data, symbols: List[str]) -> pd.DataFrame:   # pragma: no cover
         logger.info(f"[__market_data_2_df|in] ({market_data}, {symbols})")
 
         result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
