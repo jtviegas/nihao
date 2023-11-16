@@ -10,9 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class Tickers2S3parquet:
-    
     def fetch(
-        self, 
+        self,
         tickers: str,
         target: str,
         start: Optional[datetime] = None,
