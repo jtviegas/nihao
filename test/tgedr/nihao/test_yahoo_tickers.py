@@ -237,4 +237,4 @@ def expected() -> DataFrame:
 def test_get(monkeypatch, data, expected):
     o = YahooTickersSource()
     monkeypatch.setattr(yf, "download", lambda tickers, start, end, interval: data)
-    assert_frames_are_equal(actual=o.get(key=["XPTO"]), expected=expected, sort_columns=["actual_time", "variable"])
+    assert_frames_are_equal(actual=o.get(key="XPTO"), expected=expected, sort_columns=["actual_time", "variable"])

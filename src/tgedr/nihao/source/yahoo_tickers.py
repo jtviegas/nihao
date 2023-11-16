@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 import pandas as pd
 import logging
 import yfinance as yf
@@ -17,7 +17,9 @@ class YahooTickersSource(Source):
     def get(self, key: str, **kwargs) -> pd.DataFrame:
         logger.info(f"[fetch|in] ({key}, {kwargs})")
 
-        symbols: str = key
+        symbols_as_str = key
+        symbols: List[str] = [k.strip() for k in symbols_as_str.split(",")]
+
         interval = self.__DEFAULT_INTERVAL
         if "interval" in kwargs:
             interval = kwargs["interval"]
@@ -32,7 +34,7 @@ class YahooTickersSource(Source):
 
         result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
 
-        market_data = yf.download(",".join(symbols), start=start, end=end, interval=interval)
+        market_data = yf.download(symbols_as_str, start=start, end=end, interval=interval)
         if not market_data.empty:
             multiple_symbols: bool = 1 < len(symbols)
             for key, val in market_data.to_dict().items():
