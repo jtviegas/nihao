@@ -15,7 +15,7 @@ class YahooTickersSource(Source):
         super().__init__(config)
 
     def get(self, key: str, **kwargs) -> pd.DataFrame:
-        logger.info(f"[fetch|in] ({key}, {kwargs})")
+        logger.info(f"[get|in] ({key}, {kwargs})")
 
         symbols_as_str = key
         symbols: List[str] = [k.strip() for k in symbols_as_str.split(",")]
@@ -54,5 +54,5 @@ class YahooTickersSource(Source):
             result.reset_index(drop=True, inplace=True)
             result = result.sort_values(by=["actual_time", "symbol"])
 
-        logger.info(f"[fetch|out] => {result}")
+        logger.info(f"[get|out] => {result}")
         return result

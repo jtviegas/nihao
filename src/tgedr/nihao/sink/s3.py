@@ -42,7 +42,8 @@ class PdDataFrameS3Sink(S3Connector, Sink):
 
         for file in bucket.objects.all():
             if file_name in file.key:
-                raise SinkException(f"file {file_name} exists")
+                logger.info(f"[put] file {file_name} exists, going to delete")
+                self._resource.Object(bucket_name, file.key).delete()
 
         if self.__format == "parquet":
             out_buffer = BytesIO()

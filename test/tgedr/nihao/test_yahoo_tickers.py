@@ -3,6 +3,7 @@ import yfinance as yf
 from pandas import DataFrame, Timestamp
 
 from tgedr.nihao.commons import assert_frames_are_equal
+from tgedr.nihao.fetchers.tickers_to_s3_parquet import Tickers2S3parquet
 from tgedr.nihao.source.yahoo_tickers import YahooTickersSource
 
 
@@ -238,3 +239,16 @@ def test_get(monkeypatch, data, expected):
     o = YahooTickersSource()
     monkeypatch.setattr(yf, "download", lambda tickers, start, end, interval: data)
     assert_frames_are_equal(actual=o.get(key="XPTO"), expected=expected, sort_columns=["actual_time", "variable"])
+
+
+def test_get(monkeypatch, data, expected):
+    o = YahooTickersSource()
+    df = o.get(key="AMD")
+    assert 0 < df.size
+
+
+@pytest.mark.skip(reason="should be done manually")
+def test_Tickers2S3parquet(monkeypatch):
+    fetcher = Tickers2S3parquet()
+    fetcher.fetch(tickers="AMD,MSFT", target="s3://de-landing-dev-c7f56307-b37b-4826-a208-edd0ead99c76/dataengineering")
+    assert True
