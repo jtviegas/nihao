@@ -14,3 +14,4 @@ coverage.xml
 tests-results.xml
 htmlcov/
 
+.coverage.*

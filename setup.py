@@ -4,7 +4,7 @@ import os
 from setuptools import setup, find_namespace_packages
 
 logger = logging.getLogger(__name__)
-VERSION = "0.0.11"
+VERSION = "0.0.12"
 
 # version = os.getenv("TGEDR_NIHAO_VERSION", VERSION)
 version = VERSION 
@@ -31,9 +31,10 @@ setup(
     package_dir={"": "src"},
     packages=find_namespace_packages(where="src"),
     install_requires=[
-        "yfinance==0.2.31",
-        "boto3==1.28.85",
-        "pyarrow==14.0.1"
+        "yfinance>=0.2",
+        "boto3>=1.28",
+        "pyarrow>=14",
+        "pyspark>=3.5"
     ],
     python_requires='>=3.7',
     # package_data={'sample': ['package_data.dat'],},
