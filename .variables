@@ -1,5 +1,6 @@
 export PYPI_USER="__token__"
 
-# configure aws access
-export AWS_PROFILE=tgedr_root   # you may override this in .local_variables
-export AWS_DEFAULT_REGION="eu-north-1"
+# configure aws access in .local_variables
+# export AWS_PROFILE=...
+# export AWS_DEFAULT_REGION=...
+
