@@ -1,7 +1,7 @@
 import pytest
 from pyspark.sql import DataFrame, Row
 
-from tgedr.nihao.commons import assert_frames_are_equal
+from tgedr.nihao.commons.utils import assert_frames_are_equal
 from tgedr.nihao.processors.ticker_simple_analysis import TickerSimpleAnalysis
 
 

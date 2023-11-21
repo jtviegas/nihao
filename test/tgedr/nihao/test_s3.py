@@ -1,7 +1,7 @@
 from moto import mock_s3
 from pandas import DataFrame
 
-from tgedr.nihao.commons import assert_frames_are_equal
+from tgedr.nihao.commons.utils import assert_frames_are_equal
 from tgedr.nihao.s3.s3_connector import S3Connector
 from tgedr.nihao.sink.s3 import PdDataFrameS3Sink
 from tgedr.nihao.source.s3 import PdDataFrameFromParquetSource
