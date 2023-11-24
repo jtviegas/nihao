@@ -240,6 +240,7 @@ def test_get(monkeypatch, data, expected):
     actual = o.get(key="GOOG,AMZN")
     assert_frames_are_equal(actual=actual, expected=expected, sort_columns=["actual_time", "variable"])
 
+
 @pytest.mark.skip(reason="these test should be done manually")
 def test_Tickers2S3parquet():
     # fetcher = Tickers2S3parquet()
