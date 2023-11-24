@@ -16,14 +16,15 @@ class PdDataFrameS3Sink(S3Connector, Sink):
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         S3Connector.__init__(self)
         Sink.__init__(self, config)
-        if "format" in config:
-            self.__format = config["format"]
-        else:
-            self.__format = self.__DEFAULT_FORMAT
-        if "csv_header" in config:
-            self.__csv_header = True if (1 == config["csv_header"]) else False
-        else:
-            self.__csv_header = self.__CSV_HEADER
+
+        self.__format = self.__DEFAULT_FORMAT
+        self.__csv_header = self.__CSV_HEADER
+
+        if config is not None:
+            if "format" in config:
+                self.__format = config["format"]
+            if "csv_header" in config:
+                self.__csv_header = True if (1 == config["csv_header"]) else False
 
     def put(self, obj: pd.DataFrame, key: str):
         """
