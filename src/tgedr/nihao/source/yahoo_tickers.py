@@ -65,7 +65,7 @@ class YahooTickersSource(Source):
 
     def __market_data_2_df_another_approach(self, market_data, symbols: List[str]) -> pd.DataFrame:
         logger.info(f"[__market_data_2_df_another_approach|in] ({market_data}, {symbols})")
-
+        result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
         df_as_dict = {"symbol": [], "variable": [], "value": [], "actual_time": []}
         if not market_data.empty:
             multiple_symbols: bool = 1 < len(symbols)
