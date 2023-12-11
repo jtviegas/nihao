@@ -1,9 +1,11 @@
 import logging
 from typing import Any, Dict, Optional
 
-from tgedr.nihao.processors.processor import SparkProcessor
+
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql import functions as F
+
+from tgedr.nihao.commons.processor import SparkProcessor
 
 
 logger = logging.getLogger(__name__)

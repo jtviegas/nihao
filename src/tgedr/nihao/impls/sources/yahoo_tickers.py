@@ -3,7 +3,9 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 import logging
 import yfinance as yf
-from tgedr.nihao.source.source import Source
+
+from tgedr.nihao.commons.source import Source
+
 
 logger = logging.getLogger(__name__)
 

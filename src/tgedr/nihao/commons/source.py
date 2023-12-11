@@ -12,5 +12,7 @@ class Source(ABC):
         self._config = config
 
     @abstractmethod
-    def get(self, key: str, **kwargs) -> Any:
+    def get(self, key: Any, **kwargs) -> Any:
         raise NotImplementedError()
+
+

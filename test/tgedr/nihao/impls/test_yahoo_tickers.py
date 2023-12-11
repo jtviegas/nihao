@@ -1,9 +1,9 @@
 import pytest
 import yfinance as yf
 from pandas import DataFrame, Timestamp
+from test.conftest import assert_frames_are_equal
 
-from tgedr.nihao.commons.utils import assert_frames_are_equal
-from tgedr.nihao.source.yahoo_tickers import YahooTickersSource
+from tgedr.nihao.impls.sources.yahoo_tickers import YahooTickersSource
 
 
 @pytest.fixture

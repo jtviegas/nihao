@@ -18,7 +18,7 @@ class Processor(ABC):
         logger.info(f"[__init__|out]")
 
     @abstractmethod
-    def process(self, obj: Any) -> Any:
+    def process(self, obj: Any, **kwargs) -> Any:
         raise NotImplementedError()
 
 
@@ -28,5 +28,5 @@ class SparkProcessor(Processor):
         self._spark = spark
 
     @abstractmethod
-    def process(self, obj: DataFrame) -> DataFrame:
+    def process(self, obj: DataFrame, **kwargs) -> DataFrame:
         raise NotImplementedError()
