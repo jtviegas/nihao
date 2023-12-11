@@ -1,7 +1,8 @@
+from test.conftest import assert_frames_are_equal
+
 import pytest
 import yfinance as yf
 from pandas import DataFrame, Timestamp
-from test.conftest import assert_frames_are_equal
 
 from tgedr.nihao.impls.sources.yahoo_tickers import YahooTickersSource
 

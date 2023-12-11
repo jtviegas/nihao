@@ -14,5 +14,3 @@ class Source(ABC):
     @abstractmethod
     def get(self, key: Any, **kwargs) -> Any:
         raise NotImplementedError()
-
-

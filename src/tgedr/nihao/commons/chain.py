@@ -1,7 +1,3 @@
-
-
-
-
 from abc import abstractmethod
 from typing import Any, Dict, Optional
 
@@ -10,7 +6,6 @@ class Chain:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._next: "Chain" = None
-        
 
     def next(self, handler: "Chain") -> "Chain":
         if self._next is None:
@@ -27,4 +22,3 @@ class Chain:
         self._exec(context=context)
         if self._next is not None:
             self._next.execute(context=context)
-    

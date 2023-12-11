@@ -1,11 +1,11 @@
+from test.conftest import assert_frames_are_equal
+
 from moto import mock_s3
 from pandas import DataFrame
-from test.conftest import assert_frames_are_equal
 
 from tgedr.nihao.assorted.s3.s3_connector import S3Connector
 from tgedr.nihao.impls.sinks.s3 import AwsPdDfParquetSink
 from tgedr.nihao.impls.sources.s3 import AwsParquetPdDfSource
-
 
 
 @mock_s3
