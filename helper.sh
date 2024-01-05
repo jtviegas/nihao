@@ -36,7 +36,6 @@ export FILE_LOCAL_VARIABLES=${FILE_LOCAL_VARIABLES:-".local_variables"}
 export FILE_SECRETS=${FILE_SECRETS:-".secrets"}
 export NAME="bashutils"
 export INCLUDE_FILE=".${NAME}"
-export TAR_NAME="${NAME}.tar.bz2"
 # -------------------------------
 if [ ! -f "$this_folder/$FILE_VARIABLES" ]; then
   warn "we DON'T have a $FILE_VARIABLES variables file - creating it"
@@ -91,135 +90,17 @@ update_bashutils(){
 
 # ---------- LOCAL FUNCTIONS ----------
 
-build(){
-  info "[build] ..."
-
-  _pwd=`pwd`
-  cd "$this_folder"
-
-  rm -rf dist
-  python3 -m build
-  [ "$?" -ne "0" ] && err "[build] ooppss" && exit 1
-
-  cd "$_pwd"
-  echo "[build] ...done."
-}
-
-publish(){
-  info "[publish] ..."
-
-  _pwd=`pwd`
-  cd "$this_folder"
-
-  twine upload -u $PYPI_USER -p $PYPI_API_TOKEN dist/*
-  [ "$?" -ne "0" ] && err "[publish] ooppss" && exit 1
-
-  cd "$_pwd"
-  echo "[publish] ...done."
-}
-
-code_lint()
-{
-    info "[code_lint|in]"
-    src_folders="src test"
-    info "[code_lint] ... isort..."
-    isort --profile black --src $src_folders
-    return_value=$?
-    info "[code_lint] ... isort...$return_value"
-    if [ "$return_value" -eq "0" ]; then
-      info "[code_lint] ... autoflake..."
-      autoflake --remove-all-unused-imports --in-place --recursive -r $src_folders
-      return_value=$?
-      info "[code_lint] ... autoflake...$return_value"
-    fi
-    if [ "$return_value" -eq "0" ]; then
-      info "[code_lint] ... black..."
-      black -v -t py38 $src_folders
-      return_value=$?
-      info "[code_lint] ... black...$return_value"
-    fi
-    [ "$return_value" -ne "0" ] && exit 1
-    info "[code_lint|out] => ${return_value}"
-}
-
-code_check()
-{
-    info "[code_check|in]"
-    src_folders="src test"
-    info "[code_check] ... isort..."
-    isort --profile black -v --src $src_folders
-    return_value=$?
-    info "[code_check] ... isort...$return_value"
-    if [ "$return_value" -eq "0" ]; then
-      info "[code_check] ... autoflake..."
-      autoflake --check -r $src_folders
-      return_value=$?
-      info "[code_check] ... autoflake...$return_value"
-    fi
-    if [ "$return_value" -eq "0" ]; then
-      info "[code_check] ... black..."
-      black --check $src_folders
-      return_value=$?
-      info "[code_check] ... black...$return_value"
-    fi
-    [ "$return_value" -ne "0" ] && exit 1
-    info "[code_check|out] => ${return_value}"
-}
-
-print_coverage()
-{
-  info "[print_coverage|in]"
-  coverage report -m
-  result="$?"
-  [ "$result" -ne "0" ] && exit 1
-  info "[print_coverage|out] => $result"
-}
-
-check_coverage()
-{
-  info "[check_coverage|in] ($1)"
-
-  [ -z "$1" ] && usage
-
-  local threshold=$1
-  score=$(coverage report | awk '$1 == "TOTAL" {print $NF+0}')
-   result="$?"
-  [ "$result" -ne "0" ] && exit 1
-  if (( $threshold > $score )); then
-    err "[check_coverage] $score doesn't meet $threshold"
-    exit 1
-  fi
-  info "[check_coverage|out] => $score"
-}
-
-test()
-{
-    info "[test|in] ($1)"
-    python -m pytest -x -vv --durations=0 --cov=src --junitxml=tests-results.xml --cov-report=xml --cov-report=html "$1"
-    return_value="$?"
-    [ "$return_value" -ne "0" ] && exit 1
-    info "[test|out] => ${return_value}"
-}
-
-reqs()
-{
-    info "[reqs|in]"
-    pip install -r requirements.txt
-    [ "$?" -ne "0" ] && exit 1
-    info "[reqs|out]"
-}
 
 # -------------------------------------
 usage() {
   cat <<EOM
   usage:
-  $(basename $0) { package }
-
-      - package: tars the bashutils include file
+  $(basename $0) { option }
+    options:
       - update_bashutils: updates the include '.bashutils' file
       - build
-      - publish
-      - test
+      - publish {pypi_user} {pypi_token}
+      - test {folder}
       - coverage
       - check_coverage
       - code_check
@@ -232,35 +113,32 @@ EOM
 debug "1: $1 2: $2 3: $3 4: $4 5: $5 6: $6 7: $7 8: $8 9: $9"
 
 case "$1" in
-  package)
-    package
-    ;;
   update_bashutils)
     update_bashutils
     ;;
   build)
-    build
+    python_build
     ;;
   publish)
-    publish
+    pypi_publish "$PYPI_USER" "$PYPI_API_TOKEN"
     ;;
   test)
-      test "$2"
+      python_test "$2"
       ;;
   coverage)
-      print_coverage
+      print_pytest_coverage
       ;;
   check_coverage)
-      check_coverage "$2"
+      check_pytest_coverage "$2"
       ;;
   code_check)
-      code_check
+      python_code_check
       ;;
   code_lint)
-      code_lint
+      python_code_lint
       ;;
   reqs)
-      reqs
+      python_reqs
       ;;
   *)
     usage
