@@ -1,8 +1,8 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 
-class Chain:
+class Chain(ABC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._next: "Chain" = None

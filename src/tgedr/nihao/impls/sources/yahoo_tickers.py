@@ -42,29 +42,6 @@ class YahooTickersSource(Source):
         logger.info(f"[get|out] => {result}")
         return result
 
-    def __market_data_2_df(self, market_data, symbols: List[str]) -> pd.DataFrame:  # pragma: no cover
-        logger.info(f"[__market_data_2_df|in] ({market_data}, {symbols})")
-
-        result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])
-        if not market_data.empty:
-            multiple_symbols: bool = 1 < len(symbols)
-            for key, val in market_data.to_dict().items():
-                if multiple_symbols:
-                    variable, symbol = key
-                else:
-                    variable = key
-                    symbol = symbols[0]
-
-                for ts, num in val.items():
-                    if not pd.isnull(num):
-                        entry = pd.DataFrame(
-                            {"symbol": symbol, "variable": [variable], "value": [num], "actual_time": [ts.timestamp()]}
-                        )
-                        result = pd.concat([result, entry])
-
-        logger.info(f"[__market_data_2_df|out] => {result}")
-        return result
-
     def __market_data_2_df_another_approach(self, market_data, symbols: List[str]) -> pd.DataFrame:
         logger.info(f"[__market_data_2_df_another_approach|in] ({market_data}, {symbols})")
         result = pd.DataFrame(columns=["symbol", "variable", "value", "actual_time"])

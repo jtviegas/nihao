@@ -1,6 +1,5 @@
 from typing import Any
-
-from tgedr.nihao.commons.chainable import Chainable, ContextHandler
+from tgedr.nihao.assorted.chainable import Chainable, ContextHandler
 from tgedr.nihao.commons.processor import Processor
 from tgedr.nihao.commons.sink import Sink
 from tgedr.nihao.commons.source import Source
